@@ -1,0 +1,127 @@
+
+from collections import deque
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+
+class BinarySearchTree:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, data):
+        new_node = Node(data)
+
+        if self.root is None:
+            self.root = new_node
+            return
+
+        current = self.root
+
+        while True:
+            if data < current.data:
+                if current.left is None:
+                    current.left = new_node
+                    return
+                current = current.left
+
+            elif data > current.data:
+                if current.right is None:
+                    current.right = new_node
+                    return
+                current = current.right
+
+            else:
+                print("Duplicate value ignored.")
+                return
+
+    # Print BST level-wise
+    def level_order(self):
+        if self.root is None:
+            print("Tree is empty.")
+            return
+
+        queue = deque([self.root])
+
+        while queue:
+            level_size = len(queue)
+
+            for i in range(level_size):
+                current = queue.popleft()
+                print(current.data, end=" ")
+
+                if current.left:
+                    queue.append(current.left)
+
+                if current.right:
+                    queue.append(current.right)
+
+            print()
+
+    # Find height of BST
+    def height(self, node):
+        if node is None:
+            return 0
+
+        left_height = self.height(node.left)
+        right_height = self.height(node.right)
+
+        return 1 + max(left_height, right_height)
+
+    # Print leaf nodes
+    def print_leaf_nodes(self, node):
+        if node is None:
+            return
+
+        if node.left is None and node.right is None:
+            print(node.data, end=" ")
+            return
+
+        self.print_leaf_nodes(node.left)
+        self.print_leaf_nodes(node.right)
+
+
+def main():
+    tree = BinarySearchTree()
+    new_tree = BinarySearchTree()
+
+    n = int(input("Enter number of nodes: "))
+
+    if n < 0:
+        print("Number of nodes cannot be negative.")
+        return
+
+    print("Enter BST elements:")
+
+    for i in range(n):
+        value = int(input())
+        tree.insert(value)
+
+    print("\nOriginal BST (Level-wise):")
+    tree.level_order()
+
+    # Create a new BST using the same elements
+    print("\nCreating a new BST...")
+    for i in range(n):
+        value = int(input("Enter element for new BST: "))
+        new_tree.insert(value)
+
+    print("\nNew BST (Level-wise):")
+    new_tree.level_order()
+
+    print("\nHeight of Original BST:", tree.height(tree.root))
+    print("Height of New BST:", new_tree.height(new_tree.root))
+
+    print("\nLeaf Nodes of Original BST:")
+    tree.print_leaf_nodes(tree.root)
+
+    print("\n\nLeaf Nodes of New BST:")
+    new_tree.print_leaf_nodes(new_tree.root)
+    print()
+
+
+if __name__ == "__main__":
+    main()
